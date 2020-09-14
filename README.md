@@ -18,7 +18,7 @@ Usage: whycon-id-gen [options] bits
 - `graphicsmagick-libmagick-dev-compat` - used to draw and generate .png files
 
 ## License
-This project is only available for a non-profit, academic, or educational purpose, in any other case or if not sure, please contact us on e-mail [Tomáš Krajník](tomas.krajnik@fel.cvut.cz) or [Jiří Ulrich](jiri.ulrich@fel.cvut.cz).
+This project is only available for a non-profit, academic, or educational purpose, in any other case or if not sure, please contact us on e-mail [Tomáš Krajník](mailto:tomas.krajnik@fel.cvut.cz) or [Jiří Ulrich](mailto:jiri.ulrich@fel.cvut.cz).
 See `LICENSE.md` for details.
 
 ## References
