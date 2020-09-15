@@ -29,64 +29,41 @@ void display_help()
                "    -d,    Set minimal Hamming distance (default: 1)\n";
 }
 
-// Draw the original WhyCon marker
-// Image draw_whycon_markers(){
-//     list<Drawable> drawList;
-//     Image image("1800x1800", "white");
-//     image.resolutionUnits(PixelsPerCentimeterResolution);
-//     image.density("100x100");
-
-//     // Generate original WhyCon marker
-//     drawList.push_back(DrawableStrokeColor("black"));
-//     drawList.push_back(DrawableFillColor("white"));
-//     drawList.push_back(DrawableEllipse(xc, yc, 899, 899, 0, 360));
-//     image.draw(drawList);
-//     drawList.clear();
-
-//     drawList.push_back(DrawableStrokeWidth(0));
-//     drawList.push_back(DrawableFillColor("black"));
-//     drawList.push_back(DrawableEllipse(xc, yc, 700, 700, 0, 360));
-//     image.draw(drawList);
-//     drawList.clear();
-
-//     drawList.push_back(DrawableStrokeWidth(0));
-//     drawList.push_back(DrawableFillColor("white"));
-//     drawList.push_back(DrawableEllipse(xc, yc, 420, 420, 0, 360));
-//     image.draw(drawList);
-//     drawList.clear();
-
-//     return image;
-// }
-
 std::string create_svg_open(const std::string width, const std::string height)
 {
-  return std::string("<svg width=\"" + width + "\" height=\"" + height + "\" xmlns=\"http://www.w3.org/2000/svg\">");
+  return "<svg width=\"" + width + "\" height=\"" + height + "\" xmlns=\"http://www.w3.org/2000/svg\">";
 }
 
 std::string create_svg_close()
 {
-  return std::string("</svg>");
+  return "</svg>";
 }
 
 std::string create_circle(const std::string cx, const std::string cy, const std::string r, const std::string fill, const std::string stroke)
 {
-  return std::string("<circle cx=\"" + cx + "\" cy=\"" + cy + "\" r=\"" + r + "\" fill=\"" + fill + "\" stroke=\"" + stroke + "\"/>");
+  return "<circle cx=\"" + cx + "\" cy=\"" + cy + "\" r=\"" + r + "\" fill=\"" + fill + "\" stroke=\"" + stroke + "\"/>";
 }
 
 std::string create_polygon(const std::string fill, const std::string stroke, const std::string points)
 {
-  return std::string("<polygon fill=\"" + fill + "\" stroke=\"" + stroke + "\" points=\"" + points + "\"/>");
+  return "<polygon fill=\"" + fill + "\" stroke=\"" + stroke + "\" points=\"" + points + "\"/>";
+}
+
+std::string create_rect_bg(const std::string width, const std::string height, const std::string fill, const std::string stroke)
+{
+  return "<rect x=\"0\" y=\"0\" width=\"" + width + "\" height=\"" + height + "\" fill=\"" + fill + "\" stroke=\"" + stroke + "\"/>";
+}
+
+std::string create_text(const std::string x, const std::string y, const std::string fill, const std::string size, const std::string txt)
+{
+  return "<text x=\"" + x + "\" y=\"" + y + "\" fill=\"" + fill + "\" font-size=\"" + size + "\">" + txt + "</text>";
 }
 
 // Draw the encded ID into WhyCon marker
 void draw_whycode_markers(int id, int idx, const int teethCount)
 {
-    // list<Drawable> drawList;
-    // list<Coordinate> coordsList;
-
     if(verbose)
       std::cout << "Generating WhyCode Canvas for Id " << idx << "(encoding " << id <<")\n";
-    // Image image = whycodeTorso;
 
     std::ofstream ofs(std::to_string(idx) + ".svg", std::ofstream::trunc);
     if(!ofs.is_open())
@@ -95,6 +72,7 @@ void draw_whycode_markers(int id, int idx, const int teethCount)
       return;
     }
     ofs << create_svg_open("1800", "1800");
+    ofs << create_rect_bg("1800", "1800", "white", "none");
     ofs << create_circle("900", "900", "899", "white", "black");
     ofs << create_circle("900", "900", "700", "black", "none");
     ofs << create_circle("900", "900", "420", "white", "none");
@@ -103,9 +81,6 @@ void draw_whycode_markers(int id, int idx, const int teethCount)
     if(verbose)
       std::cout << "Converting ID to binary\n";
     std::string s = std::bitset<32>(id).to_string();
-
-    // drawList.push_back(DrawableStrokeWidth(0));
-    // drawList.push_back(DrawableFillColor("black"));
 
     // For each encoding bit
     double x1, y1, x2, y2;
@@ -116,41 +91,16 @@ void draw_whycode_markers(int id, int idx, const int teethCount)
         x2 = xc + 650 * cos(-w * (2 * i + 1) / 180.0 * M_PI);
         y2 = yc + 650 * sin(-w * (2 * i + 1) / 180.0 * M_PI);
 
-        // list<Coordinate> coordsList;
-        // coordsList.push_back(Coordinate(xc, yc));
-        // coordsList.push_back(Coordinate(x1, y1));
-        // coordsList.push_back(Coordinate(x2, y2));
-
         // Draw each of the segments onto the original WhyCon marker
         if(verbose)
-          std::cout << "Drawing Segment Size: " << x1 << y1 << x2 << y2 << std::endl;
-        // drawList.push_back(DrawablePolygon(coordsList));
-        // coordsList.clear();
-        ofs << create_polygon("black", "none", std::string("900,900 ") + std::to_string(x1) + "," + std::to_string(y1) + " " + std::to_string(x2) + "," + std::to_string(y2));
+          std::cout << "Drawing Segment Size: " << x1 << "," << y1 << " " << x2 << "," << y2 << std::endl;
+        ofs << create_polygon("black", "none", "900,900 " + std::to_string(x1) + "," + std::to_string(y1) + " " + std::to_string(x2) + "," + std::to_string(y2));
     }
-    // image.draw(drawList);
-    // drawList.clear();
 
     // Draw a final white circle in the centre to complete the marker
-    printf("Rendering final image: %d (encoding %d)  =>  %08d.png\n", idx, id, idx);
-    // drawList.push_back(DrawableStrokeWidth(0));
-    // drawList.push_back(DrawableFillColor("white"));
-    // drawList.push_back(DrawableEllipse(xc, yc, 240, 240, 0, 360));
-    // image.draw(drawList);
-    // drawList.clear();
+    std::cout << "Rendering final image: " << idx << " (encoding " << id << ") => " << idx << ".svg\n";
     ofs << create_circle("900", "900", "240", "white", "none");
-
-    // char infoText[13];
-    // sprintf(infoText, "ID: %d", idx);
-    // drawList.push_back(DrawableText(1600, 100, infoText));
-    // drawList.push_back(DrawablePointSize(44));
-    // image.draw(drawList);
-    // drawList.clear();
-
-    // char fname[13];
-    // sprintf(fname, "%08d.png", idx);
-    // image.magick("PNG");
-    // image.write(fname);
+    ofs << create_text("1600", "100", "black", "44", "ID: " + std::to_string(idx));
     ofs << create_svg_close();
     ofs.close();
 }
@@ -165,8 +115,10 @@ int main(int argc, char *argv[])
   }
 
   int c;
-  while((c = getopt(argc, argv, "hd:vl")) != -1){
-      switch(c){
+  while((c = getopt(argc, argv, "hd:vl")) != -1)
+  {
+      switch(c)
+      {
           case 'h':
             display_help();
             return 0;
@@ -212,12 +164,13 @@ int main(int argc, char *argv[])
     if(ofs.is_open())
     {
       ofs << create_svg_open("1800", "1800");
+      ofs << create_rect_bg("1800", "1800", "white", "none");
       ofs << create_circle("900", "900", "899", "white", "black");
       ofs << create_circle("900", "900", "700", "black", "none");
       ofs << create_circle("900", "900", "420", "white", "none");
       ofs << create_svg_close();
       ofs.close();
-      std::cout << "Rendering final image: => 00000000.png\n";
+      std::cout << "Rendering final image: => 00000000.svg\n";
       return 0;
     }
     else
@@ -244,8 +197,6 @@ int main(int argc, char *argv[])
       return 1;
   }
   w = 360.0/(float)teethCount/2.0;
-
-  // whycodeTorso = draw_whycon_markers();
 
   for(int i = 0; i < n; i++)
   {
