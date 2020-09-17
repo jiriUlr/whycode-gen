@@ -2,6 +2,11 @@
 Changelog for whycode-gen
 =========================
 
+v1.1.0 (2020-09-17)
+-------------------
+* `viewBox` transform to allow easy resizing
+* fixed aspect reatio to avoid deforming the marker while resizing
+
 v1.0.0 (2020-09-16)
 -------------------
 * Output to SVG instead of PNG
