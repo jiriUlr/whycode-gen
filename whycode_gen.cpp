@@ -31,7 +31,7 @@ void display_help()
 
 std::string create_svg_open(const std::string width, const std::string height)
 {
-  return "<svg width=\"" + width + "\" height=\"" + height + "\" xmlns=\"http://www.w3.org/2000/svg\">";
+  return "<svg width=\"" + width + "\" height=\"" + height + "\" viewBox=\"0 0 1800 1800\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\">";
 }
 
 std::string create_svg_close()
