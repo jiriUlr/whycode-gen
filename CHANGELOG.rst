@@ -4,8 +4,13 @@ Changelog for whycode-gen
 
 v1.1.0 (2020-09-17)
 -------------------
+* Using `path` instead of `polygon` to avoid rendering issues
+* Simplified SVG generation
+
+v1.1.0 (2020-09-17)
+-------------------
 * `viewBox` transform to allow easy resizing
-* fixed aspect reatio to avoid deforming the marker while resizing
+* Fixed aspect reatio to avoid deforming the marker while resizing
 
 v1.0.0 (2020-09-16)
 -------------------
