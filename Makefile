@@ -1,7 +1,5 @@
 CFLAGS := -ggdb -std=c++11 -Wall -O2 -march=native
-CFLAGS += `Magick++-config --cxxflags --cppflags`
-LDFLAGS := CNecklace.cpp -lm
-LDFLAGS += `Magick++-config --ldflags --libs`
+LDFLAGS := CNecklace.cpp
 
 all: whycode_gen
 
