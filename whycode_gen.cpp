@@ -24,19 +24,21 @@ void display_help()
 {
   std::cout << "Usage: whycon-id-gen [-v] -l\n" <<
                "       whycon-id-gen [-v] [-d <distance>] <bits>\n\n" <<
-               "    -v,    Verbose while generating canvas (default: false)\n" <<
-               "    -l,    Generating the original WhyCon marker\n" <<
-               "    -d,    Set minimal Hamming distance (default: 1)\n";
+               "    -h     Help\n" <<
+               "    -v     Verbose while generating canvas (default: false)\n" <<
+               "    -l     Generating the original WhyCon marker\n" <<
+               "    -d     Set minimal Hamming distance (default: 1)\n";
 }
 
-std::string start_svg(const std::string width, const std::string height)
+std::string start_svg(const std::string size)
 {
-  return "<svg width=\"" + width + "\" height=\"" + height + "\" viewBox=\"0 0 1800 1800\"" +
+  return "<svg width=\"" + size + "\" height=\"" + size + "\" viewBox=\"0 0 1800 1800\"" +
          " preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\">" +
          "<rect x=\"0\" y=\"0\" width=\"1800\" height=\"1800\" fill=\"white\" stroke=\"none\"/>" +
          "<circle cx=\"900\" cy=\"900\" r=\"899\" fill=\"white\" stroke=\"black\"/>" +
          "<circle cx=\"900\" cy=\"900\" r=\"700\" fill=\"black\" stroke=\"none\"/>" +
-         "<circle cx=\"900\" cy=\"900\" r=\"420\" fill=\"white\" stroke=\"none\"/>";
+         "<circle cx=\"900\" cy=\"900\" r=\"420\" fill=\"white\" stroke=\"none\"/>" +
+         "<path stroke=\"black\" d=\"M900,1800 L900,1775 M900,0 L900,25 M0,900 L25,900 M1800,900 L1775,900\"/>";
 }
 
 std::string end_svg()
@@ -92,18 +94,19 @@ void draw_whycode_markers(const int id, const int idx, const int teethCount, con
     std::cerr << "Error opening file\n";
     return;
   }
-  ofs << start_svg("200mm", "200mm");
+  ofs << start_svg("200mm");
   ofs << draw_segments(points);
-  ofs << write_text("44", "ID: " + std::to_string(idx));
+  ofs << write_text("44", "&#8635; " + std::to_string(idx));
   ofs << end_svg();
   ofs.close();
 }
 
 int main(int argc, char *argv[])
 {
+  // Test at least one arg has been passed
   if(argc == 1)
   {
-    std::cerr << "Not enough arguments\n";
+    std::cerr << "Not enough arguments or options\n\n";
     display_help();
     return 1;
   }
@@ -114,10 +117,11 @@ int main(int argc, char *argv[])
   bool verbose = false;
 
   // Process command line arguments
-  int c;
-  while((c = getopt(argc, argv, "hd:vl")) != -1)
+  opterr = 0;
+  int opt;
+  while((opt = getopt(argc, argv, ":hd:vl")) != -1)
   {
-    switch(c)
+    switch(opt)
     {
       case 'h':
         display_help();
@@ -129,7 +133,7 @@ int main(int argc, char *argv[])
         }
         else
         {
-          std::cerr << "Invalid Hamming distance\n";
+          std::cerr << "Invalid Hamming distance\n\n";
           display_help();
           return 1;
         }
@@ -140,17 +144,22 @@ int main(int argc, char *argv[])
       case 'l':
         legacy = true;
         break;
+      case ':':
+        std::cerr << "Option requires an argument\n\n";
+        display_help();
+        return 1;
       default:
       case '?':
-        std::cerr << "Unknown option\n";
+        std::cerr << "Unknown option\n\n";
         display_help();
         return 1;
     }
   }
 
-  if(optind > argc + 1)
+  // Test if not too many args passed
+  if(optind + 1 < argc || (legacy && optind < argc))
   {
-    std::cerr << "Too many arguments\n";
+    std::cerr << "Too many arguments or options\n\n";
     display_help();
     return 1;
   }
@@ -167,15 +176,24 @@ int main(int argc, char *argv[])
       std::cerr << "Error opening file\n";
       return 1;
     }
-    ofs << start_svg("200mm", "200mm");
+    ofs << start_svg("200mm");
     ofs << end_svg();
     ofs.close();
     return 0;
   }
 
+  // Test a non-option argument was entered
+  if(optind >= argc)
+  {
+    std::cerr << "Number of bits required\n\n";
+    display_help();
+    return 1;
+  }
+
+  // Test a non-option argument is a number and >= 3
   if(!std::isdigit(argv[optind][0]) || std::atoi(argv[optind]) < 3)
   {
-    std::cerr << "Invalid number of bits. Accepts only >= 3\n";
+    std::cerr << "Invalid number of bits. Necklace code is possible with >= 3 bits\n\n";
     display_help();
     return 1;
   }

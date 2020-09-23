@@ -8,9 +8,10 @@ $ ./whycode_gen -h
 Usage: whycon-id-gen [-v] -l
        whycon-id-gen [-v] [-d <distance>] <bits>
 
-    -v,    Verbose while generating canvas (default: false)
-    -l,    Generating the original WhyCon marker
-    -d,    Set minimal Hamming distance (default: 1)
+    -h     Help
+    -v     Verbose while generating canvas (default: false)
+    -l     Generating the original WhyCon marker
+    -d     Set minimal Hamming distance (default: 1)
 ```
 
 ## License
