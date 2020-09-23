@@ -1,32 +1,23 @@
-#include <stdlib.h>
-
-#include "CNecklace.h"
-
 #include <unistd.h>
-
+#include <cstdlib>
+#include <cctype>
+#include <cmath>
 #include <array>
 #include <vector>
-#include <cmath>
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <bitset>
+#include "CNecklace.h"
 
-
-// Define default parameters
-bool verbose = false;
-bool legacy = false;
-int hamming = 1;
-const int xc = 900;
-const int yc = 900;
-float w;
 
 struct Point
 {
   double x;
   double y;
 };
+
 
 // Display help
 void display_help()
@@ -68,18 +59,13 @@ std::string write_text(const std::string size, const std::string txt)
 }
 
 // Draw the encded ID into WhyCon marker
-void draw_whycode_markers(int id, int idx, const int teethCount)
+void draw_whycode_markers(const int id, const int idx, const int teethCount, const float w, const bool verbose)
 {
-  if(verbose)
-    std::cout << "Generating WhyCode for ID " << idx << "(encoding " << id << ")\n";
+  // Centre of the image
+  static const int xc = 900;
+  static const int yc = 900;
 
-  std::ofstream ofs(std::to_string(idx) + ".svg", std::ofstream::trunc);
-  if(!ofs.is_open())
-  {
-    std::cerr << "Error opening file\n";
-    return;
-  }
-  ofs << start_svg("200mm", "200mm");
+  std::cout << "Generating WhyCode for ID " << idx << " (encoding " << id << ") => " << idx << ".svg\n";
 
   // Convert lowest bit shift to binary
   std::string s = std::bitset<32>(id).to_string();
@@ -98,10 +84,16 @@ void draw_whycode_markers(int id, int idx, const int teethCount)
       std::cout << "Drawing Segment Size: " << x1 << "," << y1 << " " << x2 << "," << y2 << std::endl;
     points[i] = std::array<Point, 2>{Point{x1, y1}, Point{x2, y2}};
   }
-  ofs << draw_segments(points);
 
-  // Draw a final white circle in the centre to complete the marker
-  std::cout << "Rendering final image: " << idx << " (encoding " << id << ") => " << idx << ".svg\n";
+  // Generate SVG
+  std::ofstream ofs(std::to_string(idx) + ".svg", std::ofstream::trunc);
+  if(!ofs.is_open())
+  {
+    std::cerr << "Error opening file\n";
+    return;
+  }
+  ofs << start_svg("200mm", "200mm");
+  ofs << draw_segments(points);
   ofs << write_text("44", "ID: " + std::to_string(idx));
   ofs << end_svg();
   ofs.close();
@@ -116,6 +108,12 @@ int main(int argc, char *argv[])
     return 1;
   }
 
+  // Define default parameters
+  int hamming = 1;
+  bool legacy = false;
+  bool verbose = false;
+
+  // Process command line arguments
   int c;
   while((c = getopt(argc, argv, "hd:vl")) != -1)
   {
@@ -125,9 +123,9 @@ int main(int argc, char *argv[])
         display_help();
         return 0;
       case 'd':
-        if(isdigit(optarg[0]))
+        if(std::isdigit(optarg[0]))
         {
-          hamming = atoi(optarg);
+          hamming = std::atoi(optarg);
         }
         else
         {
@@ -157,11 +155,12 @@ int main(int argc, char *argv[])
     return 1;
   }
 
+  // Create the orig WhyCon
   if(legacy)
   {
-    if(verbose)
-      std::cout << "Generate original WhyCon marker\n";
+    std::cout << "Generating original WhyCon marker => whycon.svg\n";
 
+    // Generate SVG
     std::ofstream ofs("whycon.svg", std::ofstream::trunc);
     if(!ofs.is_open())
     {
@@ -171,19 +170,19 @@ int main(int argc, char *argv[])
     ofs << start_svg("200mm", "200mm");
     ofs << end_svg();
     ofs.close();
-    std::cout << "Rendering final image: => whycon.svg\n";
     return 0;
   }
 
-  if(!isdigit(argv[optind][0]) || atoi(argv[optind]) < 3)
+  if(!std::isdigit(argv[optind][0]) || std::atoi(argv[optind]) < 3)
   {
     std::cerr << "Invalid number of bits. Accepts only >= 3\n";
     display_help();
     return 1;
   }
 
-  const int teethCount = atoi(argv[optind]);
+  const int teethCount = std::atoi(argv[optind]);
   CNecklace decoder = CNecklace(teethCount, hamming);
+
   int a[10000];
   int n = decoder.printAll(a);
   if (decoder.verifyHamming(a,teethCount, n) < hamming)
@@ -191,11 +190,12 @@ int main(int argc, char *argv[])
     std::cerr << "Hamming distance too low!\n";
     return 1;
   }
-  w = 360.0/(float)teethCount/2.0;
+
+  float w = 360.0/(float)teethCount/2.0;
 
   for(int i = 0; i < n; i++)
   {
-    draw_whycode_markers(a[i], i + 1, teethCount);
+    draw_whycode_markers(a[i], i + 1, teethCount, w, verbose);
   }
 
   return 0;

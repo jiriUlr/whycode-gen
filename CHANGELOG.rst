@@ -2,6 +2,11 @@
 Changelog for whycode-gen
 =========================
 
+v1.1.1 (2020-09-23)
+-------------------
+* Minor changes
+* Code refactoring
+
 v1.1.0 (2020-09-17)
 -------------------
 * Using `path` instead of `polygon` to avoid rendering issues
