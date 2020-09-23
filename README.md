@@ -4,18 +4,14 @@ To compile it, just type `make`.
 Then, it can generate the markers inside the current working directory.
 Simply run the binary followed by a number of ID bits or any other options as
 ```
-@$ ./whycode_gen -h
+$ ./whycode_gen -h
+Usage: whycon-id-gen [-v] -l
+       whycon-id-gen [-v] [-d <distance>] <bits>
 
-Usage: whycon-id-gen [options] bits
-    -h,    Display this help
     -v,    Verbose while generating canvas (default: false)
     -l,    Generating the original WhyCon marker
     -d,    Set minimal Hamming distance (default: 1)
-
 ```
-
-## Dependencies
-- `graphicsmagick-libmagick-dev-compat` - used to draw and generate .png files
 
 ## License
 This project is only available for a non-profit, academic, or educational purpose, in any other case or if not sure, please contact us on e-mail [Tomáš Krajník](mailto:tomas.krajnik@fel.cvut.cz) or [Jiří Ulrich](mailto:jiri.ulrich@fel.cvut.cz).
