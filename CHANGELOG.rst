@@ -2,6 +2,11 @@
 Changelog for whycode-gen
 =========================
 
+v1.3.0 (2020-09-25)
+-------------------
+* Improved processing of command line parameters
+* Minor code refactoring
+
 v1.2.1 (2020-09-23)
 -------------------
 * Minor changes
