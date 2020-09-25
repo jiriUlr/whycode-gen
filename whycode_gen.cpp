@@ -203,7 +203,7 @@ int main(int argc, char *argv[])
 
   int a[10000];
   int n = decoder.printAll(a);
-  if (decoder.verifyHamming(a,teethCount, n) < hamming)
+  if(decoder.verifyHamming(a, teethCount, n) < hamming)
   {
     std::cerr << "Hamming distance too low!\n";
     return 1;
