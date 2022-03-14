@@ -191,7 +191,7 @@ int main(int argc, char *argv[])
   }
 
   // Test a non-option argument is a number and >= 3
-  if(!std::isdigit(argv[optind][0]) || std::atoi(argv[optind]) < 3)
+  if(!std::isdigit(argv[optind][0]) || std::atoi(argv[optind]) < 2)
   {
     std::cerr << "Invalid number of bits. Necklace code is possible with >= 3 bits\n\n";
     display_help();

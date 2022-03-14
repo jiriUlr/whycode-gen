@@ -1,4 +1,4 @@
-CFLAGS := -ggdb -std=c++11 -Wall -O2 -march=native
+CFLAGS := -ggdb -std=c++11 -Wall -O2
 LDFLAGS := CNecklace.cpp
 
 all: whycode_gen
