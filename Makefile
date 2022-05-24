@@ -1,13 +1,15 @@
-CFLAGS := -ggdb -std=c++11 -Wall -O2
-LDFLAGS := CNecklace.cpp
-
-all: whycode_gen
+CXX_FLAGS := -std=c++11 -Wall -O2
 
 whycode_gen: whycode_gen.cpp CNecklace.cpp
-	$(CXX) whycode_gen.cpp $(CFLAGS) $(LDFLAGS) -o $@ 
+	$(CXX) $(CXX_FLAGS) $^ -o $@ 
 
 clean:
-	rm -f *.o whycode_gen
+	rm -f whycode_gen
 
-.PHONY: clean
+clean_markers:
+	rm -f *.svg
+
+clean_all: clean clean_markers
+
+.PHONY: clean clean_markers clean_all
 
