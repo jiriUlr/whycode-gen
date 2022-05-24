@@ -2,6 +2,12 @@
 Changelog for whycode-gen
 =========================
 
+v1.4.0 (2022-05-24)
+-------------------
+* Option -c for drawing a cross at marker's centre
+* Option -t for tight fit without white border
+* Makefile and code minor changes
+
 v1.3.0 (2020-09-25)
 -------------------
 * Improved processing of command line parameters
