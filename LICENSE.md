@@ -1,4 +1,4 @@
-Copyright (c) 2020, Jiří Ulrich, Tomáš Krajník, Chronorobotics Laboratory at CTU FEE in Prague
+Copyright (c) 2020-2022, Jiří Ulrich, Tomáš Krajník, Chronorobotics Laboratory at CTU FEE in Prague
 Copyright (c) 2020, Peter Lightbody, University of Lincoln
 All rights reserved.
 
